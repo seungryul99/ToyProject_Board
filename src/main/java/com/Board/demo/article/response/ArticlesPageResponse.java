@@ -11,16 +11,16 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AllArticlesPageResponse {
+public class ArticlesPageResponse {
 
     private String username;
 
     private List<ArticleResponse> articles;
 
-    private Long currnetPageNumber;
+    private int currnetPageNumber;
 
-    private Long currentPageSize;
+    private int currentPageSize;
 
-    private Long totalPages;
+    private int totalPages;
 
 }

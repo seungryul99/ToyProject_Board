@@ -53,6 +53,11 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public String getCurrentLoginUsername(){
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null){
+            return null;
+        }
+
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 

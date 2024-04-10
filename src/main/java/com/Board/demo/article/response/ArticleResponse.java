@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ArticleResponse {
 
-    private String articleId;
+    private Long articleId;
 
     private String title;
 
