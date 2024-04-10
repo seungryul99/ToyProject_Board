@@ -17,6 +17,8 @@ public class LoginFailManager extends SimpleUrlAuthenticationFailureHandler {
 
         String errorCode;
 
+        
+        // 임시로 1이면 로그인 시도 실패 예외, 2면 알수없는 오류로 지정해둠
         if (exception instanceof BadCredentialsException) {
             errorCode = "1";
         } else errorCode = "2";
