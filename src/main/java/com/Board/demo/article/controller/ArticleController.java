@@ -1,13 +1,19 @@
 package com.Board.demo.article.controller;
 
 
+import com.Board.demo.article.request.ArticleCreateRequest;
 import com.Board.demo.article.response.ArticlesPageResponse;
 import com.Board.demo.article.service.ArticleService;
 import com.Board.demo.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -39,6 +45,28 @@ public class ArticleController {
         return "articles";
     }
 
+    @GetMapping("/articleCreateForm")
+    public String articleCreateFormPage(){
+
+        return "articleCreateForm";
+    }
+
+    @PostMapping("/article")
+    public String articleCreate(@Validated @ModelAttribute ArticleCreateRequest articleCreateRequest, BindingResult bindingResult, Model model){
+
+
+        if (bindingResult.hasErrors()) {
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                model.addAttribute(error.getField() + "Error", error.getDefaultMessage());
+            }
+            return "articleCreateForm";
+        }
+
+        String author = memberService.getCurrentLoginUsername();
+        articleService.writeArticle(articleCreateRequest,author);
+
+        return "redirect:/articles";
+    }
 
 
 }

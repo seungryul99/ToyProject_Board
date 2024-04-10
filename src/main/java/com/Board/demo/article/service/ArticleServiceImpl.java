@@ -2,6 +2,7 @@ package com.Board.demo.article.service;
 
 import com.Board.demo.article.entity.Article;
 import com.Board.demo.article.repository.ArticleRepository;
+import com.Board.demo.article.request.ArticleCreateRequest;
 import com.Board.demo.article.response.ArticleResponse;
 import com.Board.demo.article.response.ArticlesPageResponse;
 import com.Board.demo.member.repository.MemberRepository;
@@ -50,5 +51,18 @@ public class ArticleServiceImpl implements ArticleService{
         articlesPageResponse.setTotalPages(articlePage.getTotalPages());
 
         return articlesPageResponse;
+    }
+
+    @Override
+    @Transactional
+    public void writeArticle(ArticleCreateRequest articleCreateRequest, String author) {
+
+        Article article = Article.builder()
+                .member(memberRepository.findByUsername(author))
+                .title(articleCreateRequest.getTitle())
+                .content(articleCreateRequest.getContent())
+                .build();
+
+        articleRepository.save(article);
     }
 }
