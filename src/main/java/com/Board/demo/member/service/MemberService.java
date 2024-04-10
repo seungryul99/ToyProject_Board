@@ -14,4 +14,6 @@ public interface MemberService {
     Boolean checkDuplicateNickname(String nickname);
 
     String getCurrentLoginUsername();
+
+    String getCurrentLoginUserNickname();
 }

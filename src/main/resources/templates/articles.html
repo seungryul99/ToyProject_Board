@@ -115,8 +115,8 @@
 <div class="container">
     <h1>게시판</h1>
 
-    <div th:if="${member != null}" class="logged-in-member">
-        <strong>Hi</strong> <span th:text="${member.nickname}"></span>
+    <div th:if="${response.nickname != null}" class="logged-in-member">
+        <strong>Hi</strong> <span th:text="${response.nickname}"></span>
     </div>
 
     <br/><br/>
@@ -128,12 +128,12 @@
     </div>
 
 
-    <div th:each="article, iterstat : ${articles}" class="article">
-        <div class="article-item" th:text="${(pageable.pageNumber) * pageable.pageSize + iterstat.count}">1</div>
+    <div th:each="articleResponse, iterstat : ${response.articles}" class="article">
+        <div class="article-item" th:text="${(response.currnetPageNumber) * response.currentPageSize + iterstat.count}">1</div>
         <div class="article-item">
-            <a th:href="@{'/article/' + ${article.getId()}}"  th:text="${article.getTitle()}">게시글 1</a>
+            <a th:href="@{'/article/' + ${articleResponse.articleId}}"  th:text="${articleResponse.title}">게시글 1</a>
         </div>
-        <div th:text="${article.getMember().getNickname()}" class="article-item">푸바오</div>
+        <div th:text="${articleResponse.author}" class="article-item">푸바오</div>
     </div>
 
 
@@ -141,19 +141,19 @@
     <!-- 페이지 버튼들 -->
     <div class="page-buttons">
         <!-- 첫번째 페이지로 이동 -->
-        <a th:href="@{/articles(page=1, size=${pageable.pageSize})}"> << &nbsp; </a>
+        <a th:href="@{/articles(page=1, size=${response.currentPageSize})}"> << &nbsp; </a>
 
 
 
 
-        <span th:if="${pageable.pageNumber == 0 || pageable.pageNumber == 1}">
+        <span th:if="${response.currnetPageNumber == 0 || response.currnetPageNumber == 1}">
         <span th:each="page, stat: ${#numbers.sequence(1, 5)}">
             <!-- 현재 페이지는 숫자만 표시 -->
-            <span th:text="${page}" th:if="${page == pageable.pageNumber + 1}"></span>
+            <span th:text="${page}" th:if="${page == response.currnetPageNumber + 1}"></span>
             <!-- 현재 페이지 링크 X, 다른 페이지번호에는 링크를 보여준다 -->
-            <span th:unless="${page == pageable.pageNumber + 1}">
-                <span th:if="${page >= 1 and page <= articles.totalPages}">
-                    <a th:href="@{/articles(page=${page}, size=${pageable.pageSize})}" th:text="${page}"></a>
+            <span th:unless="${page == response.currnetPageNumber + 1}">
+                <span th:if="${page >= 1 and page <= response.totalPages}">
+                    <a th:href="@{/articles(page=${page}, size=${response.currentPageSize})}" th:text="${page}"></a>
                 </span>
             </span>
         </span>
@@ -161,13 +161,13 @@
 
 
 
-        <span th:if="${(pageable.pageNumber != 0 && pageable.pageNumber != 1) && (pageable.pageNumber == articles.totalPages -1 || pageable.pageNumber == articles.totalPages -2)}">
-            <span th:each="page, stat: ${#numbers.sequence(articles.totalPages - 4, articles.totalPages )}">
-                <span th:text="${page}" th:if="${page == pageable.pageNumber + 1}"></span>
+        <span th:if="${(response.currnetPageNumber != 0 && response.currnetPageNumber != 1) && (response.currnetPageNumber == response.totalPages -1 || response.currnetPageNumber == response.totalPages -2)}">
+            <span th:each="page, stat: ${#numbers.sequence(response.totalPages - 4, response.totalPages )}">
+                <span th:text="${page}" th:if="${page == response.currnetPageNumber + 1}"></span>
 
-                <span th:unless="${page == pageable.pageNumber + 1}">
-                    <span th:if="${page >= 1 and page <= articles.totalPages}">
-                    <a th:href="@{/articles(page=${page}, size=${pageable.pageSize})}" th:text="${page}"></a>
+                <span th:unless="${page == response.currnetPageNumber + 1}">
+                    <span th:if="${page >= 1 and page <= response.totalPages}">
+                    <a th:href="@{/articles(page=${page}, size=${response.currentPageSize})}" th:text="${page}"></a>
                 </span>
             </span>
         </span>
@@ -176,12 +176,12 @@
 
 
 
-        <span th:if="${pageable.pageNumber >1 && pageable.pageNumber <articles.totalPages -2}">
-        <span th:each="page, stat: ${#numbers.sequence(pageable.pageNumber - 1, pageable.pageNumber + 3)}">
-            <span th:text="${page}" th:if="${page == pageable.pageNumber + 1}"></span>
-            <span th:unless="${page == pageable.pageNumber + 1}">
-                <span th:if="${page >= 1 and page <= articles.totalPages}">
-                    <a th:href="@{/articles(page=${page}, size=${pageable.pageSize})}" th:text="${page}"></a>
+        <span th:if="${response.currnetPageNumber >1 && response.currnetPageNumber <response.totalPages -2}">
+        <span th:each="page, stat: ${#numbers.sequence(response.currnetPageNumber - 1, response.currnetPageNumber + 3)}">
+            <span th:text="${page}" th:if="${page == response.currnetPageNumber + 1}"></span>
+            <span th:unless="${page == response.currnetPageNumber + 1}">
+                <span th:if="${page >= 1 and page <= response.totalPages}">
+                    <a th:href="@{/articles(page=${page}, size=${response.currentPageSize})}" th:text="${page}"></a>
                 </span>
             </span>
         </span>
@@ -190,7 +190,7 @@
 
 
         <!-- 마지막 페이지로 이동 -->
-        <a th:href="@{/articles(page=${articles.totalPages}, size=${pageable.pageSize})}"> &nbsp; >>   </a>
+        <a th:href="@{/articles(page=${response.totalPages}, size=${response.currentPageSize})}"> &nbsp; >>   </a>
     </div>
 
 
@@ -199,11 +199,11 @@
 
 
     <div>
-        <form th:if="${member != null}" th:action="@{/logout}" method="post">
+        <form th:if="${response.nickname != null}" th:action="@{/logout}" method="post">
             <button class="logout-button" type="submit">로그아웃</button>
         </form>
 
-        <form th:if="${member == null}" th:action="@{/login}" method="get">
+        <form th:if="${response.nickname == null}" th:action="@{/login}" method="get">
             <button class="logout-button" type="submit">로그인</button>
         </form>
 

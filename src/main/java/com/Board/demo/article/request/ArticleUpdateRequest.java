@@ -14,7 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ArticleUpdateRequest {
 
-    @NotNull
+    private Long articleId;
+
     private Long memberId;
 
     @NotBlank(message = "제목은 비워둘 수 없습니다.")

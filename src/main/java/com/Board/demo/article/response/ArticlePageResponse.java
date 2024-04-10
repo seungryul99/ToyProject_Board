@@ -14,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class ArticlePageResponse {
 
+    private Long articleId;
+
     private String title;
 
     private String author;

@@ -148,31 +148,29 @@
 <div class="container">
     <h2>게시글 상세조회</h2>
     <div class="article">
-        <div class="article-title" th:text="${article.title}">게시글 제목</div>
-        <div class="article-info">작성자: <span th:text="${article.member.nickname}">사용자1</span></div>
-        <div class="article-content" th:text="${article.content}"></div>
+        <div class="article-title" th:text="${response.title}">게시글 제목</div>
+        <div class="article-info">작성자: <span th:text="${response.author}">사용자1</span></div>
+        <div class="article-content" th:text="${response.content}"></div>
     </div>
 
     <div class="buttons">
-        <div class="list-button-container">
-            <a th:href="@{'/paging?page=' + ${currentPageNumber}}" class="list-button">목록으로</a>
-        </div>
-        <br/>
-        <div th:if="${canUpdate}" class="edit-delete-buttons">
-            <a th:href="@{/update/{articleId}/{currentPageNumber}(articleId=${article.id},currentPageNumber=${currentPageNumber})}" class="edit-button">수정하기</a>
+<!--        <div class="list-button-container">-->
+            <a th:href="@{'/articles'}" class="list-button">목록으로</a>
+<!--        </div>-->
+<!--        <br/>-->
+        <div th:if="${response.canUpdate}" class="edit-delete-buttons">
+            <a th:href="@{/update/{articleId}(articleId=${response.articleId})}" class="edit-button">수정하기</a>
         </div>
     </div>
 
     <div class="comments">
         <h3 style="color: #0b7dda">댓글</h3>
-        <div th:each="comment : ${comments}" class="comment">
-            <div class="comment-author" th:text="${comment.member.nickname}">작성자</div>
-            <div class="comment-content" th:text="${comment.content}">댓글 내용</div>
-            <form th:if="${currentMember != null && currentMember.getId().equals(comment.member.getId())}" th:action="@{/deleteComment}" method="post">
-                <input type="hidden" name="currentPageNumber" th:value="${currentPageNumber}">
-                <input type="hidden" name="commentId" th:value="${comment.id}">
-                <input type="hidden" name="articleId" th:value="${article.id}">
-                <button class="delete-comment" type="submit">x</button>
+        <div th:each="commentResponse : ${response.comments}" class="comment">
+            <div class="comment-author" th:text="${commentResponse.writer}">작성자</div>
+            <div class="comment-content" th:text="${commentResponse.content}">댓글 내용</div>
+<!--            <form th:if="${currentMember != null && currentMember.getId().equals(comment.member.getId())}" th:action="@{/deleteComment}" method="post">-->
+<!--                <input type="hidden" name="articleId" th:value="${article.id}">-->
+<!--                <button class="delete-comment" type="submit">x</button>-->
             </form>
         </div>
     </div>
@@ -180,8 +178,6 @@
 
     <div class="add-comment">
         <form action="/addComment" method="post">
-            <input type="hidden" name="articleId" th:value="${article.id}">
-            <input type="hidden" name="currentPageNumber" th:value="${currentPageNumber}">
             <textarea id="content" name="content" placeholder="댓글을 입력하세요" required></textarea>
             <button class="add-comment-button">댓글 추가</button>
         </form>

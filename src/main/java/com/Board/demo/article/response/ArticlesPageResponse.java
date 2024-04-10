@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ArticlesPageResponse {
 
-    private String username;
+    private String nickname;
 
     private List<ArticleResponse> articles;
 

@@ -84,6 +84,7 @@ public class ArticleServiceImpl implements ArticleService{
         articleUpdatePageResponse.setContent(article.getContent());
         articleUpdatePageResponse.setArticleId(articleId);
 
+
         return articleUpdatePageResponse;
     }
 
@@ -98,6 +99,7 @@ public class ArticleServiceImpl implements ArticleService{
     @Transactional
     public void updateArticle(ArticleUpdateRequest articleUpdateRequest) {
         Article article = Article.builder()
+                .id(articleUpdateRequest.getArticleId())
                 .title(articleUpdateRequest.getTitle())
                 .content(articleUpdateRequest.getContent())
                 .member(memberRepository.findById(articleUpdateRequest.getMemberId()).get()).build();
@@ -106,6 +108,7 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
+    @Transactional
     public void deleteArticle(ArticleDeleteRequest articleDeleteRequest) {
 
         articleRepository.deleteById(articleDeleteRequest.getArticleId());
@@ -117,11 +120,12 @@ public class ArticleServiceImpl implements ArticleService{
         ArticlePageResponse articlePageResponse = new ArticlePageResponse();
         Article article = articleRepository.findById(articleId).get();
 
+        articlePageResponse.setArticleId(articleId);
         articlePageResponse.setTitle(article.getTitle());
         articlePageResponse.setAuthor(article.getMember().getNickname());
         articlePageResponse.setContent(article.getContent());
 
-        if(currentMember!=null && currentMember.equals(articlePageResponse.getAuthor())){
+        if(currentMember!=null && currentMember.equals(article.getMember().getUsername())){
             articlePageResponse.setCanUpdate(true);
         }
 

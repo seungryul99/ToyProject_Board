@@ -12,13 +12,14 @@ import com.Board.demo.article.response.ArticlesPageResponse;
 import com.Board.demo.article.service.ArticleService;
 import com.Board.demo.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ArticleController {
@@ -33,7 +34,6 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
-
     @GetMapping("/articles")
     public String articlePage(@RequestParam(defaultValue = "1", name = "page") int page,
                               @RequestParam(defaultValue = "15", name = "size") int size,
@@ -41,9 +41,10 @@ public class ArticleController {
 
         // 이렇게 안하면 articleService 에서 MemberService를 이용하게 되는데 DTO 설계부터 틀린거 같긴한데, 이정도 트레이드 오프는 해줘도 되지 않나 라는 생각이 들었음
         ArticlesPageResponse articlesPageResponse = articleService.getArticlesPage(page, size);
-        articlesPageResponse.setUsername(memberService.getCurrentLoginUsername());
+        articlesPageResponse.setNickname(memberService.getCurrentLoginUserNickname());
 
         model.addAttribute("response",articlesPageResponse);
+
 
         return "articles";
     }
@@ -83,10 +84,11 @@ public class ArticleController {
 
 
 
-    @GetMapping("/update/{articleId)")
+    @GetMapping("/update/{articleId}")
     public String articleUpdateFormPage(@PathVariable("articleId") Long articleId, Model model){
 
         ArticleUpdatePageResponse article = articleService.getArticle(articleId);
+
         model.addAttribute("response",article);
 
         return "articleUpdateForm";
@@ -99,6 +101,8 @@ public class ArticleController {
         if(!(memberService.getCurrentLoginUsername().equals(articleService.getAuthor(articleId)))){
             throw new BadArticleUpdateException();
         }
+
+        articleUpdateRequest.setArticleId(articleId);
 
         articleService.updateArticle(articleUpdateRequest);
 
