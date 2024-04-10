@@ -1,5 +1,4 @@
-package com.Board.demo.comment.response;
-
+package com.Board.demo.comment.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentResponse {
+public class CommentDeleteRequest {
 
-    private String writer;
+    private Long commentId;
 
-    private String content;
-
-    private boolean canDelete;
 }

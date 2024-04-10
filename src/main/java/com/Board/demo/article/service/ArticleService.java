@@ -1,7 +1,9 @@
 package com.Board.demo.article.service;
 
 import com.Board.demo.article.request.ArticleCreateRequest;
+import com.Board.demo.article.request.ArticleDeleteRequest;
 import com.Board.demo.article.request.ArticleUpdateRequest;
+import com.Board.demo.article.response.ArticlePageResponse;
 import com.Board.demo.article.response.ArticleUpdatePageResponse;
 import com.Board.demo.article.response.ArticlesPageResponse;
 
@@ -15,4 +17,8 @@ public interface ArticleService {
     String getAuthor(Long articleId);
 
     void updateArticle(ArticleUpdateRequest articleUpdateRequest);
+
+    void deleteArticle(ArticleDeleteRequest articleDeleteRequest);
+
+    ArticlePageResponse readArticle(Long articleId, String currentMember);
 }

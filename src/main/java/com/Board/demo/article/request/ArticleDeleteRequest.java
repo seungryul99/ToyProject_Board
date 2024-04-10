@@ -1,4 +1,4 @@
-package com.Board.demo.comment.response;
+package com.Board.demo.article.request;
 
 
 import lombok.AllArgsConstructor;
@@ -10,11 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentResponse {
+public class ArticleDeleteRequest {
 
-    private String writer;
+    private Long articleId;
 
-    private String content;
-
-    private boolean canDelete;
 }

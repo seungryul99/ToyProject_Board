@@ -3,10 +3,15 @@ package com.Board.demo.article.service;
 import com.Board.demo.article.entity.Article;
 import com.Board.demo.article.repository.ArticleRepository;
 import com.Board.demo.article.request.ArticleCreateRequest;
+import com.Board.demo.article.request.ArticleDeleteRequest;
 import com.Board.demo.article.request.ArticleUpdateRequest;
+import com.Board.demo.article.response.ArticlePageResponse;
 import com.Board.demo.article.response.ArticleResponse;
 import com.Board.demo.article.response.ArticleUpdatePageResponse;
 import com.Board.demo.article.response.ArticlesPageResponse;
+import com.Board.demo.comment.entity.Comment;
+import com.Board.demo.comment.repository.CommentRepository;
+import com.Board.demo.comment.response.CommentResponse;
 import com.Board.demo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +33,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     private final MemberRepository memberRepository;
 
+    private final CommentRepository commentRepository;
 
     @Override
     public ArticlesPageResponse getArticlesPage(int page, int size) {
@@ -81,6 +87,8 @@ public class ArticleServiceImpl implements ArticleService{
         return articleUpdatePageResponse;
     }
 
+
+
     @Override
     public String getAuthor(Long articleId) {
         return articleRepository.findById(articleId).get().getMember().getNickname();
@@ -95,6 +103,44 @@ public class ArticleServiceImpl implements ArticleService{
                 .member(memberRepository.findById(articleUpdateRequest.getMemberId()).get()).build();
 
         articleRepository.save(article);
+    }
+
+    @Override
+    public void deleteArticle(ArticleDeleteRequest articleDeleteRequest) {
+
+        articleRepository.deleteById(articleDeleteRequest.getArticleId());
+    }
+
+    @Override
+    public ArticlePageResponse readArticle(Long articleId, String currentMember) {
+
+        ArticlePageResponse articlePageResponse = new ArticlePageResponse();
+        Article article = articleRepository.findById(articleId).get();
+
+        articlePageResponse.setTitle(article.getTitle());
+        articlePageResponse.setAuthor(article.getMember().getNickname());
+        articlePageResponse.setContent(article.getContent());
+
+        if(currentMember!=null && currentMember.equals(articlePageResponse.getAuthor())){
+            articlePageResponse.setCanUpdate(true);
+        }
+
+        List<Comment> comments = commentRepository.findCommentsByArticleId(articleId);
+        List<CommentResponse> commentsResponse = new ArrayList<>();
+
+        for (Comment x : comments){
+            CommentResponse commentResponse = new CommentResponse(x.getMember().getNickname(),x.getContent(),false);
+
+            if (currentMember.equals(x.getMember().getNickname())){
+                commentResponse.setCanDelete(true);
+            }
+
+            commentsResponse.add(commentResponse);
+        }
+
+        articlePageResponse.setComments(commentsResponse);
+
+        return articlePageResponse;
     }
 
 

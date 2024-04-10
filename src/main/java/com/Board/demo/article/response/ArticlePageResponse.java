@@ -20,9 +20,7 @@ public class ArticlePageResponse {
 
     private String content;
 
-    private Long backPageNumber;
-
-    private Boolean canUpdate;
+    private boolean canUpdate;
 
     private List<CommentResponse> comments;
 }

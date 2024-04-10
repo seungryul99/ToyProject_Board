@@ -1,9 +1,12 @@
 package com.Board.demo.article.controller;
 
 
+import com.Board.demo.article.exception.BadArticleDeleteException;
 import com.Board.demo.article.exception.BadArticleUpdateException;
 import com.Board.demo.article.request.ArticleCreateRequest;
+import com.Board.demo.article.request.ArticleDeleteRequest;
 import com.Board.demo.article.request.ArticleUpdateRequest;
+import com.Board.demo.article.response.ArticlePageResponse;
 import com.Board.demo.article.response.ArticleUpdatePageResponse;
 import com.Board.demo.article.response.ArticlesPageResponse;
 import com.Board.demo.article.service.ArticleService;
@@ -68,6 +71,17 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
+    @GetMapping("/article/{articleId}")
+    public String articlePage(@PathVariable("articleId") Long articleId, Model model){
+
+        String currentMember = memberService.getCurrentLoginUsername();
+        ArticlePageResponse articlePageResponse = articleService.readArticle(articleId,currentMember);
+        model.addAttribute("response",articlePageResponse);
+
+        return "article";
+    }
+
+
 
     @GetMapping("/update/{articleId)")
     public String articleUpdateFormPage(@PathVariable("articleId") Long articleId, Model model){
@@ -88,8 +102,20 @@ public class ArticleController {
 
         articleService.updateArticle(articleUpdateRequest);
 
-        // article page가 나와 봐야 여기를 구현 할 수 있을 거 같음
-        return "redirect:/articles?page="+articleUpdateRequest.getBackPageNumber()+"&size="+articleUpdateRequest.getBackPageSize();
+        return "redirect:/article/" + articleId;
     }
+
+    @PostMapping("/delete")
+    public String articleDelete(ArticleDeleteRequest articleDeleteRequest){
+
+        if(!(memberService.getCurrentLoginUsername().equals(articleService.getAuthor(articleDeleteRequest.getArticleId())))){
+            throw new BadArticleDeleteException();
+        }
+
+        articleService.deleteArticle(articleDeleteRequest);
+
+        return "/articles";
+    }
+
 
 }
