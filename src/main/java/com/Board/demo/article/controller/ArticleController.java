@@ -1,7 +1,10 @@
 package com.Board.demo.article.controller;
 
 
+import com.Board.demo.article.exception.BadArticleUpdateException;
 import com.Board.demo.article.request.ArticleCreateRequest;
+import com.Board.demo.article.request.ArticleUpdateRequest;
+import com.Board.demo.article.response.ArticleUpdatePageResponse;
 import com.Board.demo.article.response.ArticlesPageResponse;
 import com.Board.demo.article.service.ArticleService;
 import com.Board.demo.member.service.MemberService;
@@ -11,10 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -68,5 +68,28 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
+
+    @GetMapping("/update/{articleId)")
+    public String articleUpdateFormPage(@PathVariable("articleId") Long articleId, Model model){
+
+        ArticleUpdatePageResponse article = articleService.getArticle(articleId);
+        model.addAttribute("response",article);
+
+        return "articleUpdateForm";
+    }
+
+    @PostMapping("/update/{articleId}")
+    public String articleUpdate(@PathVariable("articleId") Long articleId,
+                                @Validated @ModelAttribute ArticleUpdateRequest articleUpdateRequest){
+
+        if(!(memberService.getCurrentLoginUsername().equals(articleService.getAuthor(articleId)))){
+            throw new BadArticleUpdateException();
+        }
+
+        articleService.updateArticle(articleUpdateRequest);
+
+        // article page가 나와 봐야 여기를 구현 할 수 있을 거 같음
+        return "redirect:/articles?page="+articleUpdateRequest.getBackPageNumber()+"&size="+articleUpdateRequest.getBackPageSize();
+    }
 
 }

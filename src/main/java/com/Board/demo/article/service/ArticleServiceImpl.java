@@ -3,7 +3,9 @@ package com.Board.demo.article.service;
 import com.Board.demo.article.entity.Article;
 import com.Board.demo.article.repository.ArticleRepository;
 import com.Board.demo.article.request.ArticleCreateRequest;
+import com.Board.demo.article.request.ArticleUpdateRequest;
 import com.Board.demo.article.response.ArticleResponse;
+import com.Board.demo.article.response.ArticleUpdatePageResponse;
 import com.Board.demo.article.response.ArticlesPageResponse;
 import com.Board.demo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -65,4 +67,35 @@ public class ArticleServiceImpl implements ArticleService{
 
         articleRepository.save(article);
     }
+
+    @Override
+    public ArticleUpdatePageResponse getArticle(Long articleId) {
+
+        ArticleUpdatePageResponse articleUpdatePageResponse = new ArticleUpdatePageResponse();
+        Article article = articleRepository.findById(articleId).get();
+
+        articleUpdatePageResponse.setTitle(article.getTitle());
+        articleUpdatePageResponse.setContent(article.getContent());
+        articleUpdatePageResponse.setArticleId(articleId);
+
+        return articleUpdatePageResponse;
+    }
+
+    @Override
+    public String getAuthor(Long articleId) {
+        return articleRepository.findById(articleId).get().getMember().getNickname();
+    }
+
+    @Override
+    @Transactional
+    public void updateArticle(ArticleUpdateRequest articleUpdateRequest) {
+        Article article = Article.builder()
+                .title(articleUpdateRequest.getTitle())
+                .content(articleUpdateRequest.getContent())
+                .member(memberRepository.findById(articleUpdateRequest.getMemberId()).get()).build();
+
+        articleRepository.save(article);
+    }
+
+
 }
