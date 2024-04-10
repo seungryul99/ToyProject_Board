@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 수정</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #2196F3;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        textarea {
+            padding: 11px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: black;
+            width: calc(100% - 22px);
+        }
+        textarea {
+            height: 300px;
+            resize: none;
+        }
+
+        .blue-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none; /* 추가 */
+            margin-right: 10px; /* 오른쪽 여백 추가 */
+        }
+
+        .blue-button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>게시글 수정</h2>
+    <form th:action="@{/update/{articleId}(articleId=${article.id})}" method="post">
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" th:value="${article.title}" required>
+        <label for="content">내용:</label>
+        <textarea id="content" name="content" th:text="${article.content}" required></textarea>
+        <input type="hidden" id="currentPageNumber" name="currentPageNumber" th:value="${currentPageNumber}">
+        <input class="blue-button" type="submit" value="수정하기">
+    </form>
+    <form id="deleteForm" action="/delete" method="post">
+        <input type="hidden" id="deletearticleId" name="articleId" th:value="${article.id}">
+        <button type="submit" class="delete-button blue-button">삭제하기</button>
+    </form>
+
+    <form th:action="@{/article/{articleId}/{currentPageNumber}(articleId=${article.id}, currentPageNumber=${currentPageNumber})}">
+        <input type="hidden" id="articleId" name="articleId" th:value="${article.id}">
+        <input type="submit" class="blue-button" value="취소하기">
+    </form>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            position: relative; /* 로그아웃 버튼의 위치를 조정하기 위해 부모 요소를 relative로 설정 */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative; /* 자식 요소들의 위치를 조정하기 위해 상대 위치로 설정 */
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #2196F3;
+        }
+        .article {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+        .article-item {
+            padding: 0 10px;
+        }
+        .article-item:first-child {
+            flex: 0.5;
+        }
+        .article-item:nth-child(2) {
+            flex: 2;
+            font-weight: bold;
+        }
+        .article-item:last-child {
+            flex: 1;
+            text-align: right;
+        }
+        a {
+            text-decoration: none;
+            color: #2196F3;
+            cursor: pointer;
+        }
+        a:hover {
+            text-decoration: none;
+            color: #0b7dda;
+        }
+        .write-button {
+            position: absolute; /* 고정 위치 */
+            bottom: 10px; /* 화면 아래에서 20px 떨어진 위치 */
+            right: 20px; /* 화면 오른쪽에서 20px 떨어진 위치 */
+            background-color: #2196F3;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            margin-left: 10px; /* 로그아웃 버튼과의 간격 조정 */
+        }
+
+        .write-button:hover {
+            background-color: #0b7dda;
+        }
+        /* 로그아웃 버튼 스타일 */
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px; /* 화면 오른쪽 상단에 위치 */
+            background-color: #333; /* 옅은 검정색 */
+            color: #fff; /* 텍스트 색상 변경 */
+            padding: 5px 10px; /* 작은 크기로 만들기 */
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px; /* 작은 폰트 크기 적용 */
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #555; /* 호버 시 배경색 변경 */
+        }
+        .logged-in-member {
+            text-align: right;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logged-in-member span {
+            font-weight: bold;
+            color: #2196F3; /* 닉네임 색상 */
+            margin-left: 5px; /* 닉네임과 '님' 사이의 간격 */
+        }
+        /* 페이지 버튼들을 하단 중앙에 정렬하기 위한 스타일 */
+        .page-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>게시판</h1>
+
+    <div th:if="${member != null}" class="logged-in-member">
+        <strong>Hi</strong> <span th:text="${member.nickname}"></span>
+    </div>
+
+    <br/><br/>
+
+    <div class="article article-list">
+        <div class="article-item">No.</div>
+        <div class="article-item">Title</div>
+        <div class="article-item">Author</div>
+    </div>
+
+
+    <div th:each="article, iterstat : ${articles}" class="article">
+        <div class="article-item" th:text="${(pageable.pageNumber) * pageable.pageSize + iterstat.count}">1</div>
+        <div class="article-item">
+            <a th:href="@{'/article/' + ${article.getId()}}"  th:text="${article.getTitle()}">게시글 1</a>
+        </div>
+        <div th:text="${article.getMember().getNickname()}" class="article-item">푸바오</div>
+    </div>
+
+
+
+    <!-- 페이지 버튼들 -->
+    <div class="page-buttons">
+        <!-- 첫번째 페이지로 이동 -->
+        <a th:href="@{/articles(page=1, size=${pageable.pageSize})}"> << &nbsp; </a>
+
+
+
+
+        <span th:if="${pageable.pageNumber == 0 || pageable.pageNumber == 1}">
+        <span th:each="page, stat: ${#numbers.sequence(1, 5)}">
+            <!-- 현재 페이지는 숫자만 표시 -->
+            <span th:text="${page}" th:if="${page == pageable.pageNumber + 1}"></span>
+            <!-- 현재 페이지 링크 X, 다른 페이지번호에는 링크를 보여준다 -->
+            <span th:unless="${page == pageable.pageNumber + 1}">
+                <span th:if="${page >= 1 and page <= articles.totalPages}">
+                    <a th:href="@{/articles(page=${page}, size=${pageable.pageSize})}" th:text="${page}"></a>
+                </span>
+            </span>
+        </span>
+        </span>
+
+
+
+        <span th:if="${(pageable.pageNumber != 0 && pageable.pageNumber != 1) && (pageable.pageNumber == articles.totalPages -1 || pageable.pageNumber == articles.totalPages -2)}">
+            <span th:each="page, stat: ${#numbers.sequence(articles.totalPages - 4, articles.totalPages )}">
+                <span th:text="${page}" th:if="${page == pageable.pageNumber + 1}"></span>
+
+                <span th:unless="${page == pageable.pageNumber + 1}">
+                    <span th:if="${page >= 1 and page <= articles.totalPages}">
+                    <a th:href="@{/articles(page=${page}, size=${pageable.pageSize})}" th:text="${page}"></a>
+                </span>
+            </span>
+        </span>
+        </span>
+
+
+
+
+        <span th:if="${pageable.pageNumber >1 && pageable.pageNumber <articles.totalPages -2}">
+        <span th:each="page, stat: ${#numbers.sequence(pageable.pageNumber - 1, pageable.pageNumber + 3)}">
+            <span th:text="${page}" th:if="${page == pageable.pageNumber + 1}"></span>
+            <span th:unless="${page == pageable.pageNumber + 1}">
+                <span th:if="${page >= 1 and page <= articles.totalPages}">
+                    <a th:href="@{/articles(page=${page}, size=${pageable.pageSize})}" th:text="${page}"></a>
+                </span>
+            </span>
+        </span>
+    </span>
+
+
+
+        <!-- 마지막 페이지로 이동 -->
+        <a th:href="@{/articles(page=${articles.totalPages}, size=${pageable.pageSize})}"> &nbsp; >>   </a>
+    </div>
+
+
+
+
+
+
+    <div>
+        <form th:if="${member != null}" th:action="@{/logout}" method="post">
+            <button class="logout-button" type="submit">로그아웃</button>
+        </form>
+
+        <form th:if="${member == null}" th:action="@{/login}" method="get">
+            <button class="logout-button" type="submit">로그인</button>
+        </form>
+
+    </div>
+
+    <button class="write-button" onclick="location.href='/articleCreateForm'" type="button">글 작성</button>
+</div>
+</body>
+</html>

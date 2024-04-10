@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #2196F3;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        textarea,
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 300px;
+            resize: none; /* 사용자 크기 조절 불가능 설정 */
+        }
+        input[type="submit"] {
+            background-color: #2196F3;
+            color: #fff;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0b7dda;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .button-container button {
+            width: 48%;
+        }
+        .btn-primary {
+            background-color: #2196F3;
+            color: #fff;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background-color: black;
+            color: #fff;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>게시글 작성</h2>
+    <form action="" th:action="@{/article}" method="post">
+        <div th:if="${titleError != null}">
+            <p style="color: red;"><span th:text="${titleError}"></span></p>
+        </div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required>
+
+        <div th:if="${contentError != null}">
+            <p style="color: red;"><span th:text="${contentError}"></span></p>
+        </div>
+        <label for="content">내용:</label>
+        <textarea id="content" name="content" required></textarea>
+        <input type="hidden" name="currentPageNumber" th:value="1">
+        <div class="button-container">
+            <button class="btn btn-primary" type="submit">등록</button>
+            <button class="btn btn-secondary" onclick="location.href='/'" type="button">취소</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

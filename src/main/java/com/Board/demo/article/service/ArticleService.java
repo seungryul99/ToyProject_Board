@@ -20,5 +20,5 @@ public interface ArticleService {
 
     void deleteArticle(ArticleDeleteRequest articleDeleteRequest);
 
-    ArticlePageResponse readArticle(Long articleId, String currentMember);
+    ArticlePageResponse readArticle(Long articleId);
 }
