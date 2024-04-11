@@ -155,8 +155,10 @@
 
     <div class="buttons">
         <div class="list-button-container">
-            <a th:href="@{'/articles'}" class="list-button">목록으로</a>
+            <a href="/articles" class="list-button">목록으로</a>
         </div>
+
+
         <br/>
         <div th:if="${response.canUpdate}" class="edit-delete-buttons">
             <a th:href="@{/update/{articleId}(articleId=${response.articleId})}" class="edit-button">수정하기</a>
@@ -168,16 +170,17 @@
         <div th:each="commentResponse : ${response.comments}" class="comment">
             <div class="comment-author" th:text="${commentResponse.writer}">작성자</div>
             <div class="comment-content" th:text="${commentResponse.content}">댓글 내용</div>
-<!--            <form th:if="${currentMember != null && currentMember.getId().equals(comment.member.getId())}" th:action="@{/deleteComment}" method="post">-->
-<!--                <input type="hidden" name="articleId" th:value="${article.id}">-->
+<!--            <form th:if="${commentResponse.canDelete}" th:action="@{/deleteComment}" method="post">-->
+<!--                <input type="hidden" name="articleId" th:value="${response.articleId}">-->
 <!--                <button class="delete-comment" type="submit">x</button>-->
-            </form>
+<!--            </form>-->
         </div>
     </div>
 
 
     <div class="add-comment">
         <form action="/addComment" method="post">
+            <input type="hidden" name="articleId" th:value="${response.articleId}">
             <textarea id="content" name="content" placeholder="댓글을 입력하세요" required></textarea>
             <button class="add-comment-button">댓글 추가</button>
         </form>

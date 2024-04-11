@@ -78,7 +78,7 @@
         <button type="submit" class="delete-button blue-button">삭제하기</button>
     </form>
 
-    <form th:action="@{/article/{articleId}(articleId=${response.articleId})}">
+    <form th:action="@{/article}">
         <input type="hidden" id="articleId" name="articleId" th:value="${response.articleId}">
         <input type="submit" class="blue-button" value="취소하기">
     </form>

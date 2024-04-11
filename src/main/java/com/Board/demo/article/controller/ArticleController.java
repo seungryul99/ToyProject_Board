@@ -113,13 +113,13 @@ public class ArticleController {
     @PostMapping("/delete")
     public String articleDelete(ArticleDeleteRequest articleDeleteRequest){
 
-        if(!(memberService.getCurrentLoginUsername().equals(articleService.getAuthor(articleDeleteRequest.getArticleId())))){
+        if(!(memberService.getCurrentLoginUserNickname().equals(articleService.getAuthor(articleDeleteRequest.getArticleId())))){
             throw new BadArticleDeleteException();
         }
 
         articleService.deleteArticle(articleDeleteRequest);
 
-        return "/articles";
+        return "redirect:/articles";
     }
 
 

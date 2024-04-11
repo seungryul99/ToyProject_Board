@@ -11,7 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentCreateRequest {
 
-    private Long memberId;
+    private Long articleId;
+
+    private String writer;
 
     private String content;
 }
