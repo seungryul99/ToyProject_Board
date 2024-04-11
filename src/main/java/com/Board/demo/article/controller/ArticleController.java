@@ -98,11 +98,12 @@ public class ArticleController {
     public String articleUpdate(@PathVariable("articleId") Long articleId,
                                 @Validated @ModelAttribute ArticleUpdateRequest articleUpdateRequest){
 
-        if(!(memberService.getCurrentLoginUsername().equals(articleService.getAuthor(articleId)))){
+        if(!(memberService.getCurrentLoginUserNickname().equals(articleService.getAuthor(articleId)))){
             throw new BadArticleUpdateException();
         }
 
         articleUpdateRequest.setArticleId(articleId);
+
 
         articleService.updateArticle(articleUpdateRequest);
 

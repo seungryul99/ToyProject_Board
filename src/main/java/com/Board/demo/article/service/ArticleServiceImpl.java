@@ -1,6 +1,7 @@
 package com.Board.demo.article.service;
 
 import com.Board.demo.article.entity.Article;
+import com.Board.demo.article.exception.BadArticleUpdateException;
 import com.Board.demo.article.repository.ArticleRepository;
 import com.Board.demo.article.request.ArticleCreateRequest;
 import com.Board.demo.article.request.ArticleDeleteRequest;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,11 +100,15 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     @Transactional
     public void updateArticle(ArticleUpdateRequest articleUpdateRequest) {
+
+
+
         Article article = Article.builder()
                 .id(articleUpdateRequest.getArticleId())
                 .title(articleUpdateRequest.getTitle())
                 .content(articleUpdateRequest.getContent())
-                .member(memberRepository.findById(articleUpdateRequest.getMemberId()).get()).build();
+                .member(memberRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()))
+                        .build();
 
         articleRepository.save(article);
     }

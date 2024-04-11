@@ -154,10 +154,10 @@
     </div>
 
     <div class="buttons">
-<!--        <div class="list-button-container">-->
+        <div class="list-button-container">
             <a th:href="@{'/articles'}" class="list-button">목록으로</a>
-<!--        </div>-->
-<!--        <br/>-->
+        </div>
+        <br/>
         <div th:if="${response.canUpdate}" class="edit-delete-buttons">
             <a th:href="@{/update/{articleId}(articleId=${response.articleId})}" class="edit-button">수정하기</a>
         </div>
