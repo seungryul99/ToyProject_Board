@@ -170,10 +170,11 @@
         <div th:each="commentResponse : ${response.comments}" class="comment">
             <div class="comment-author" th:text="${commentResponse.writer}">작성자</div>
             <div class="comment-content" th:text="${commentResponse.content}">댓글 내용</div>
-<!--            <form th:if="${commentResponse.canDelete}" th:action="@{/deleteComment}" method="post">-->
-<!--                <input type="hidden" name="articleId" th:value="${response.articleId}">-->
-<!--                <button class="delete-comment" type="submit">x</button>-->
-<!--            </form>-->
+            <form th:if="${commentResponse.canDelete}" th:action="@{/deleteComment}" method="post">
+                <input type="hidden" name="articleId" th:value="${response.articleId}">
+                <input type="hidden" name="commentId" th:value="${commentResponse.commentId}">
+                <button class="delete-comment" type="submit">x</button>
+            </form>
         </div>
     </div>
 

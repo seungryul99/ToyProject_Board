@@ -1,6 +1,7 @@
 package com.Board.demo.comment.controller;
 
 import com.Board.demo.comment.request.CommentCreateRequest;
+import com.Board.demo.comment.request.CommentDeleteRequest;
 import com.Board.demo.comment.service.CommentService;
 import com.Board.demo.member.entity.Member;
 import com.Board.demo.member.service.MemberService;
@@ -28,6 +29,14 @@ public class CommentController {
         commentService.addComment(commentCreateRequest);
 
         return "redirect:/article/"+commentCreateRequest.getArticleId();
+    }
+
+    @PostMapping("/deleteComment")
+    public String deleteComment(CommentDeleteRequest commentDeleteRequest){
+
+        commentService.deleteComment(commentDeleteRequest);
+
+        return "redirect:/article/"+commentDeleteRequest.getArticleId();
     }
 
 }

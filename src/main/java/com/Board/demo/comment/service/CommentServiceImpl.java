@@ -4,6 +4,7 @@ import com.Board.demo.article.repository.ArticleRepository;
 import com.Board.demo.comment.entity.Comment;
 import com.Board.demo.comment.repository.CommentRepository;
 import com.Board.demo.comment.request.CommentCreateRequest;
+import com.Board.demo.comment.request.CommentDeleteRequest;
 import com.Board.demo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,5 +34,12 @@ public class CommentServiceImpl implements CommentService{
 
 
         commentRepository.save(comment);
+    }
+
+    @Override
+    @Transactional
+    public void deleteComment(CommentDeleteRequest commentDeleteRequest) {
+
+        commentRepository.deleteById(commentDeleteRequest.getCommentId());
     }
 }

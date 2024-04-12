@@ -139,9 +139,9 @@ public class ArticleServiceImpl implements ArticleService{
         List<CommentResponse> commentsResponse = new ArrayList<>();
 
         for (Comment x : comments){
-            CommentResponse commentResponse = new CommentResponse(x.getMember().getNickname(),x.getContent(),false);
+            CommentResponse commentResponse = new CommentResponse(x.getId(),x.getMember().getNickname(),x.getContent(),false);
 
-            if (currentMember.equals(x.getMember().getNickname())){
+            if (currentMember!=null && currentMember.equals(x.getMember().getUsername())){
                 commentResponse.setCanDelete(true);
             }
 

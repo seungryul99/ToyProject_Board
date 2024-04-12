@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentResponse {
 
+    private Long commentId;
+
     private String writer;
 
     private String content;

@@ -11,6 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentDeleteRequest {
 
+    private Long articleId;
+
     private Long commentId;
 
 }
